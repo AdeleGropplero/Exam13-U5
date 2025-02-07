@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface EdificioRepository extends JpaRepository<Edificio, Integer> {
 
     boolean existsByNome(String nome);
+
+    Edificio findByNome(String nome);
 }

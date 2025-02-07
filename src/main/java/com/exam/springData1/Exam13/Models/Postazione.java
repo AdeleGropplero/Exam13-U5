@@ -14,14 +14,15 @@ import java.util.List;
 public class Postazione {
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
+    private String nome;
     private String description;
     private TipoPostazione tipo_postazione;
     private Integer num_max_partecipanti;
     @ManyToOne
     @JoinColumn(name = "edificio_id", nullable = false)
     private Edificio edificio;
-    @OneToMany(mappedBy = "postazione", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postazione", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Prenotazione> prenotazioni;
 
     public Postazione(String description, TipoPostazione tipo_postazione, Integer num_max_partecipanti, Edificio edificio) {
@@ -29,5 +30,6 @@ public class Postazione {
         this.tipo_postazione = tipo_postazione;
         this.num_max_partecipanti = num_max_partecipanti;
         this.edificio = edificio;
+        this.nome= tipo_postazione + "_" + edificio.getNome();
     }
 }

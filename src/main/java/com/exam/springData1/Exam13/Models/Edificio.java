@@ -19,7 +19,7 @@ public class Edificio {
     private String nome;
     private String indirizzo;
     private String citta;
-    @OneToMany(mappedBy = "edificio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "edificio", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Postazione> postazioni;
 
     public Edificio(String nome, String indirizzo, String citta) {

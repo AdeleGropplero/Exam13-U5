@@ -21,7 +21,7 @@ public class Utente {
     private String nome;
     private String cognome;
     private String email;
-    @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Prenotazione> prenotazioni;
 
     private static final Random random = new Random();
