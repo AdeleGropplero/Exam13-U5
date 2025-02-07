@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface PostazioneRepository extends JpaRepository<Postazione, Integer> {
     boolean existsByNome(String nome);
+
+    Postazione findByNome(String nome);
 }

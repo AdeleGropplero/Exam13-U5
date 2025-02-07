@@ -4,10 +4,12 @@ package com.exam.springData1.Exam13.Runner;
 import com.exam.springData1.Exam13.Exceptions.ValidityException;
 import com.exam.springData1.Exam13.Models.Edificio;
 import com.exam.springData1.Exam13.Models.Postazione;
+import com.exam.springData1.Exam13.Models.Prenotazione;
 import com.exam.springData1.Exam13.Models.Utente;
 import com.exam.springData1.Exam13.Repository.EdificioRepository;
 import com.exam.springData1.Exam13.Service.EdificioService;
 import com.exam.springData1.Exam13.Service.PostazioneService;
+import com.exam.springData1.Exam13.Service.PrenotazioneService;
 import com.exam.springData1.Exam13.Service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +30,8 @@ public class Runner implements CommandLineRunner {
     private PostazioneService postazioneService;
     @Autowired
     private UtenteService utenteService;
+    @Autowired
+    private PrenotazioneService prenotazioneService;
 
 
     //----------------------------------------------------------------------------
@@ -105,7 +109,17 @@ public class Runner implements CommandLineRunner {
     @Autowired
     @Qualifier("u7")
     private Utente u7;
-
+    //----------------------------------------------------------------------------
+    //Iniezione Prenotazioni
+    @Autowired
+    @Qualifier("p1")
+    private Prenotazione p1;
+    @Autowired
+    @Qualifier("p2")
+    private Prenotazione p2;
+    @Autowired
+    @Qualifier("p3")
+    private Prenotazione p3;
     //----------------------------------------------------------------------------
     @Override
     public void run(String... args) throws Exception {
@@ -146,6 +160,19 @@ public class Runner implements CommandLineRunner {
             System.out.println("------------------");
             try {
                 utenteService.insertUtente(utente);
+            } catch (ValidityException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        System.out.println("------------------");
+
+        //----------------------------------------------------
+
+        List<Prenotazione> listaPrenotazioni = List.of(p1, p2, p3);
+        for (Prenotazione prenotazione : listaPrenotazioni) {
+            System.out.println("------------------");
+            try {
+                prenotazioneService.insertPrenotazione(prenotazione);
             } catch (ValidityException e) {
                 System.out.println(e.getMessage());
             }
