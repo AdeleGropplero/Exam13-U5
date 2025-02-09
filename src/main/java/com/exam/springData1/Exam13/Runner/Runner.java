@@ -1,6 +1,7 @@
 package com.exam.springData1.Exam13.Runner;
 
 
+import com.exam.springData1.Exam13.Enum.TipoPostazione;
 import com.exam.springData1.Exam13.Exceptions.ValidityException;
 import com.exam.springData1.Exam13.Models.Edificio;
 import com.exam.springData1.Exam13.Models.Postazione;
@@ -21,6 +22,20 @@ import java.util.List;
 
 @Component //I runners hanno l'annotation component DA NON DIMENTICARE ASSOLUTAMENTE
 public class Runner implements CommandLineRunner {
+    //----------------------------------------------------------------------------
+    // 🛑IN CASO DI ERRORI ALLA COMPILAZIONE DEL DATABASE LEGGERE QUI🛑
+    //----------------------------------------------------------------------------
+    // Buongiorno prof, per ricreare il db sul suo pc le consiglio di procedere in questo modo:
+    // Dal momento che molti oggetti dipendono da altri, così come i bean, quando manda in run
+    // il programma ovviamente da errori. Bisogna Prima di tutto commentare tutto il Runner +
+    // le classi Configuration di Postazione e Prenotazione (che sono quelle che danno problemi).
+    // Dopo di che tornare nel runner e scommentare i metodi legati a Edificio e Utente e lanciare
+    // il runner.
+    // Poi scommentare Postazione e lanciare, e infine Prenotazione e lanciare.
+    // In questo modo il database si ricompila senza problemi o errori.
+    // Sono certa che lo sapeva già come fare ma così sono più tranquilla e se mai un giorno
+    // mi riapro il programma ho un HowTo che mi rispiega come fare, visto che sicuro tra
+    // qualche giorno già mi sarò scordata.
     //----------------------------------------------------------------------------
     //Faccio l'autowired con le classi Service.
 
@@ -121,8 +136,11 @@ public class Runner implements CommandLineRunner {
     @Qualifier("p3")
     private Prenotazione p3;
     //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //Override del run
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("Runner...");
 
         //Aggiunta al database di edifici
         List<Edificio> listaEdifici = List.of(e1, e2, e3, e4);
@@ -154,7 +172,7 @@ public class Runner implements CommandLineRunner {
         }
         System.out.println("------------------");
         //----------------------------------------------------
-
+        //Aggiunta al database di Utenti
         List<Utente> listaUtenti = List.of(u1, u2, u3, u4, u5, u6, u7);
         for (Utente utente : listaUtenti) {
             System.out.println("------------------");
@@ -167,7 +185,7 @@ public class Runner implements CommandLineRunner {
         System.out.println("------------------");
 
         //----------------------------------------------------
-
+        //Aggiunta al database di Prenotazioni
         List<Prenotazione> listaPrenotazioni = List.of(p1, p2, p3);
         for (Prenotazione prenotazione : listaPrenotazioni) {
             System.out.println("------------------");
@@ -179,5 +197,26 @@ public class Runner implements CommandLineRunner {
         }
         System.out.println("------------------");
 
+        //----------------------------------------------------
+        //Ora provo a istanziare e salvare nel DB nuovi oggetti con i costruttori vuoti.
+
+        try {
+            edificioService.insertEdificio(edificioService.createEdificio(
+                                    "Tulips", "Via dei Tulipani", "Roma"));
+        }catch (ValidityException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("------------------");
+
+        try {
+            postazioneService.insertPostazione(postazioneService.createPostazione(
+                                    "Pieno zeppo di tulipani freschi olandesi, profumatissimo!",
+                                              TipoPostazione.OPENSPACE, 30,
+                                   "Tulips")
+                                              );
+        }catch (ValidityException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("------------------");
     }
 }

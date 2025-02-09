@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -16,19 +17,23 @@ public class Prenotazione {
     @Id
     @GeneratedValue
     private Long id;
-    private LocalDate data_prenotazione;
-    private LocalDate scadenza_prenotazione;
+    @Column(name = "data_prenotazione")
+    private LocalDate dataPrenotazione;
+    @Column(name = "scadenza_prenotazione")
+    private LocalDate scadenzaPrenotazione;
     @ManyToOne
     @JoinColumn(name = "utente_id", nullable = false)
+    @ToString.Exclude
     private Utente utente;
     @ManyToOne
     @JoinColumn(name = "postazione_id", nullable = false)
+    @ToString.Exclude
     private Postazione postazione;
 
-    public Prenotazione(LocalDate data_prenotazione, Utente utente, Postazione postazione) {
-        this.data_prenotazione = data_prenotazione;
+    public Prenotazione(LocalDate dataPrenotazione, Utente utente, Postazione postazione) {
+        this.dataPrenotazione = dataPrenotazione;
         this.utente = utente;
         this.postazione = postazione;
-        this.scadenza_prenotazione = data_prenotazione.plusDays(1);
+        this.scadenzaPrenotazione = dataPrenotazione.plusDays(1);
     }
 }

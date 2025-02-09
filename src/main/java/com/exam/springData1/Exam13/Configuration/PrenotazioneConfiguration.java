@@ -6,6 +6,7 @@ import com.exam.springData1.Exam13.Repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
 
@@ -30,5 +31,11 @@ public class PrenotazioneConfiguration {
     @Bean
     public Prenotazione p3() {
         return new Prenotazione(LocalDate.now(), utenteRepository.findByEmail("ijustknoweverything@mail.com"), postazioneRepository.findByNome("OPENSPACE_White Palace"));
+    }
+
+    @Bean
+    @Scope("prototype")
+    public Prenotazione prenotazione() {
+        return new Prenotazione();
     }
 }

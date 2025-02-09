@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class Edificio {
     private String indirizzo;
     private String citta;
     @OneToMany(mappedBy = "edificio", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
     private List<Postazione> postazioni;
 
     public Edificio(String nome, String indirizzo, String citta) {
