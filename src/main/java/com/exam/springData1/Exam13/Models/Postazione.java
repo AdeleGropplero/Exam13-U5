@@ -17,7 +17,7 @@ public class Postazione {
     private Integer id;
     private String nome;
     private String description;
-    private TipoPostazione tipo_postazione;
+    private TipoPostazione tipoPostazione;
     private Integer num_max_partecipanti;
     @ManyToOne
     @JoinColumn(name = "edificio_id", nullable = false)
@@ -25,11 +25,11 @@ public class Postazione {
     @OneToMany(mappedBy = "postazione", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Prenotazione> prenotazioni;
 
-    public Postazione(String description, TipoPostazione tipo_postazione, Integer num_max_partecipanti, Edificio edificio) {
+    public Postazione(String description, TipoPostazione tipoPostazione, Integer num_max_partecipanti, Edificio edificio) {
         this.description = description;
-        this.tipo_postazione = tipo_postazione;
+        this.tipoPostazione = tipoPostazione;
         this.num_max_partecipanti = num_max_partecipanti;
         this.edificio = edificio;
-        this.nome= tipo_postazione + "_" + edificio.getNome();
+        this.nome= tipoPostazione + "_" + edificio.getNome();
     }
 }

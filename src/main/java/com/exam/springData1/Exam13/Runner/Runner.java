@@ -8,6 +8,7 @@ import com.exam.springData1.Exam13.Models.Postazione;
 import com.exam.springData1.Exam13.Models.Prenotazione;
 import com.exam.springData1.Exam13.Models.Utente;
 import com.exam.springData1.Exam13.Repository.EdificioRepository;
+import com.exam.springData1.Exam13.Repository.PostazioneRepository;
 import com.exam.springData1.Exam13.Service.EdificioService;
 import com.exam.springData1.Exam13.Service.PostazioneService;
 import com.exam.springData1.Exam13.Service.PrenotazioneService;
@@ -17,11 +18,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Component //I runners hanno l'annotation component DA NON DIMENTICARE ASSOLUTAMENTE
 public class Runner implements CommandLineRunner {
+    Scanner sc = new Scanner(System.in);
     //----------------------------------------------------------------------------
     // 🛑IN CASO DI ERRORI ALLA COMPILAZIONE DEL DATABASE LEGGERE QUI🛑
     //----------------------------------------------------------------------------
@@ -43,6 +47,8 @@ public class Runner implements CommandLineRunner {
     private EdificioService edificioService;
     @Autowired
     private PostazioneService postazioneService;
+    @Autowired
+    private PostazioneRepository postazioneRepository;
     @Autowired
     private UtenteService utenteService;
     @Autowired
@@ -124,6 +130,9 @@ public class Runner implements CommandLineRunner {
     @Autowired
     @Qualifier("u7")
     private Utente u7;
+    @Autowired
+    @Qualifier("admin")
+    private Utente umberto;
     //----------------------------------------------------------------------------
     //Iniezione Prenotazioni
     @Autowired
@@ -135,6 +144,7 @@ public class Runner implements CommandLineRunner {
     @Autowired
     @Qualifier("p3")
     private Prenotazione p3;
+
     //----------------------------------------------------------------------------
     //----------------------------------------------------------------------------
     //Override del run
@@ -142,6 +152,52 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("Runner...");
 
+        System.out.println("Benvenuto sei: ");
+        System.out.println("1- Utente");
+        System.out.println("2- Amministratore");
+        String scelta = sc.nextLine();
+
+        switch (scelta) {
+            case "1":
+                ricercaUtente();
+                break;
+
+            case "2":
+                System.out.println("Inserisci email dell'utente amministratore");
+                String email = sc.nextLine();
+                if (email.equals("umberto.emanuele@mail.com")) {
+                    System.out.println("Ecco i recenti movimenti dell'app");
+                    //Movimenti.
+                    metodiApp();
+                }
+        }
+    }
+
+    public void ricercaUtente() {
+        System.out.println("\nPer che città desideri prenotare?");
+        System.out.println("Milano");
+        System.out.println("Roma");
+        System.out.println("Padova");
+        System.out.println("Bologna");
+        String sceltaCitta = sc.nextLine();
+        System.out.println("\nChe tipo di postazione desideri prenotare?");
+        System.out.println("PRIVATO");
+        System.out.println("OPENSPACE");
+        System.out.println("SALA_RIUNONI");
+        TipoPostazione sceltaPostazione = TipoPostazione.valueOf(sc.nextLine().toUpperCase());
+        if ((sceltaCitta.equals("Milano") || sceltaCitta.equals("Roma")
+             || sceltaCitta.equals("Padova") || sceltaCitta.equals("Bologna")) &&
+             (sceltaPostazione == TipoPostazione.PRIVATO
+               || sceltaPostazione == TipoPostazione.OPENSPACE
+               || sceltaPostazione == TipoPostazione.SALA_RIUNIONI)) {
+            Postazione postazioneTrovata = postazioneRepository.findByCittaAndTipoPostazione(sceltaCitta, sceltaPostazione);
+            System.out.println("\nEcco la postazione desiderata: ");
+            System.out.println(postazioneTrovata);
+        }
+        //con più tempo si poteva verificare disponibilità per data o far fare la prenotazione all'utente.
+    }
+
+    public void metodiApp() {
         //Aggiunta al database di edifici
         List<Edificio> listaEdifici = List.of(e1, e2, e3, e4);
         for (int i = 0; i < listaEdifici.size(); i++) { //ho scorporato il for in modo che faccia la verifica su
@@ -173,7 +229,7 @@ public class Runner implements CommandLineRunner {
         System.out.println("------------------");
         //----------------------------------------------------
         //Aggiunta al database di Utenti
-        List<Utente> listaUtenti = List.of(u1, u2, u3, u4, u5, u6, u7);
+        List<Utente> listaUtenti = List.of(u1, u2, u3, u4, u5, u6, u7, umberto);
         for (Utente utente : listaUtenti) {
             System.out.println("------------------");
             try {
@@ -202,19 +258,43 @@ public class Runner implements CommandLineRunner {
 
         try {
             edificioService.insertEdificio(edificioService.createEdificio(
-                                    "Tulips", "Via dei Tulipani", "Roma"));
-        }catch (ValidityException e) {
+                    "Tulips", "Via dei Tulipani", "Roma"));
+        } catch (ValidityException e) {
             System.out.println(e.getMessage());
         }
         System.out.println("------------------");
 
         try {
             postazioneService.insertPostazione(postazioneService.createPostazione(
-                                    "Pieno zeppo di tulipani freschi olandesi, profumatissimo!",
-                                              TipoPostazione.OPENSPACE, 30,
-                                   "Tulips")
-                                              );
+                    "Pieno zeppo di tulipani freschi olandesi, profumatissimo!",
+                    TipoPostazione.OPENSPACE, 30,
+                    "Tulips")
+            );
+        } catch (ValidityException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("------------------");
+
+/*        try {
+            prenotazioneService.insertPrenotazione(prenotazioneService.createPrenotazione(
+                    LocalDate.of(2025, 2, 19), "ijustknoweverything@mail.com", "PRIVATO_White Palace"));
         }catch (ValidityException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("------------------");*/
+
+        try {
+            prenotazioneService.insertPrenotazione(prenotazioneService.createPrenotazione(
+                    LocalDate.of(2025, 2, 19), "ijustknoweverything@mail.com", "PRIVATO_Adelaide Bonvicini"));
+        } catch (ValidityException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("------------------");
+
+        try {
+            prenotazioneService.insertPrenotazione(prenotazioneService.createPrenotazione(
+                    LocalDate.of(2025, 2, 19), "mailNonEsistentePerVerificaErrori@mail.com", "PRIVATO_Adelaide Bonvicini"));
+        } catch (ValidityException e) {
             System.out.println(e.getMessage());
         }
         System.out.println("------------------");

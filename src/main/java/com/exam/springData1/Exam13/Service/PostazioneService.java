@@ -38,7 +38,7 @@ public class PostazioneService {
     public Postazione createPostazione(String description, TipoPostazione tipo, int nMaxPartecipanti, String nomeEdificio){
         Postazione p = postazioneProvider.getObject();
         p.setDescription(description);
-        p.setTipo_postazione(tipo);
+        p.setTipoPostazione(tipo);
         p.setNum_max_partecipanti(nMaxPartecipanti);
 
         Edificio edificio = edificioRepository.findByNome(nomeEdificio);
@@ -49,6 +49,6 @@ public class PostazioneService {
         p.setNome(tipo + "_" + nomeEdificio);
         return p;
     }
-    //Teniamo valido l'insert edificio di prima
+    //Teniamo valido l'insert Postazione di prima
 
 }

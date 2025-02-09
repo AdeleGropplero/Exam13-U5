@@ -2,11 +2,14 @@ package com.exam.springData1.Exam13.Configuration;
 
 
 import com.exam.springData1.Exam13.Models.Utente;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 
 @Configuration
+@PropertySource("application.properties")
 public class UtenteConfiguration {
     @Bean
     // @Scope("prototype") qui commento lo scope e lascio il default singleton perchè non istanzierò più oggetti di tipo e1
@@ -48,5 +51,18 @@ public class UtenteConfiguration {
     @Scope("prototype")
     public Utente utente() {
         return new Utente();
+    }
+
+    @Value("${utente.admin.name}") private String adminName;
+    @Value("${utente.admin.lastname}") private String adminLastname;
+    @Value("${utente.admin.email}") private String adminEmail;
+
+    @Bean(name = "admin")
+    public Utente u8() {
+        return new Utente(
+                adminName,
+                adminLastname,
+                adminEmail
+                );
     }
 }

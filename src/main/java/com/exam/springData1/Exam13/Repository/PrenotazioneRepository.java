@@ -1,6 +1,7 @@
 package com.exam.springData1.Exam13.Repository;
 
 import com.exam.springData1.Exam13.Models.Prenotazione;
+import com.exam.springData1.Exam13.Models.Utente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,6 @@ public interface PrenotazioneRepository extends JpaRepository<Prenotazione, Inte
     //Questo metodo mi permette di gestire la logica delle date di prenotazione.
     boolean existsByPostazioneIdAndDataPrenotazione(Integer postazioneId, LocalDate dataPrenotazione);
 
+    boolean existsByUtenteIdAndDataPrenotazione(Long utenteId, LocalDate dataPrenotazione);
 }
+
